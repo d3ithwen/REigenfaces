@@ -1,5 +1,7 @@
 ---
-title: "Eigenfaces"
+title: "REigenfaces"
+author: "Max Edinger"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Eigenfaces}
@@ -14,6 +16,12 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Usage
+
 ```{r setup}
 library(REigenfaces)
 ```
+
+# Eigenfaces
+
+# Implementation Details

@@ -4,25 +4,42 @@
 \name{REigenfaces-package}
 \alias{REigenfaces}
 \alias{REigenfaces-package}
-\title{REigenfaces: What the Package Does (One Line, Title Case)}
+\title{REigenfaces: Face Recognition using Eigenfaces}
 \description{
-What the package does (one paragraph).
+Eigenfaces are an approach to recognize faces using \emph{principal component analysis} (PCA), established in 1991. Even though the technique has lost popularity in recent years, it is still widely used to visualize the concept and results of PCA and introduce beginners to machine learning. This R package was developed as a part of the 2020 R programming course at Heidelberg University. It provides functions to display the most important eigenfaces of a data set, display similar faces and display eigenfaces with a reduced amount of principle components.
 }
 \details{
-mypkg is an awesome package.
-It contains awesome functions, like \code{\link{add}}.
+The REigenfaces package contains the following functions:
+\itemize{
+\item{\code{\link{load_dataset}}}
+\item{\code{\link{show_most_important_eigenfaces}}}
+\item{\code{\link{show_similar_faces}}}
+\item{\code{\link{reconstruct_dataset_images}}}
+\item{\code{\link{change_max_eigenfaces}}}
+}
+To learn more about REigenfaces, refer to the vignettes and function documentations.
 }
 \references{
-\url{https://de.wikipedia.org/wiki/Eigengesichter}
+Useful links:
+\itemize{
+\item{\url{https://en.wikipedia.org/wiki/Eigenface}: general information}
+\item{\url{https://www.bytefish.de/pdf/eigenfaces.pdf}: mathematical details and examples}
+\item{\url{https://towardsdatascience.com/eigenfaces-recovering-humans-from-ghosts-17606c328184}: implementation details and training data (\code{lfwcrop_grey.zip})}
+}
 }
 \author{
-\strong{Maintainer}: Max Edinger \email{iu220@stud.uni-heidelberg.de} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+\strong{Maintainer}: Max Edinger \email{iu220@stud.uni-heidelberg.de}
 
 Authors:
 \itemize{
-  \item First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
-  \item First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
-  \item First Last \email{first.last@example.com} (\href{https://orcid.org/YOUR-ORCID-ID}{ORCID})
+  \item Bjarn  de Jong \email{ B.de_Jong@stud.uni-heidelberg.de}
+  \item Daniel Kliemann \email{D.Kliemann@stud.uni-heidelberg.de}
+  \item Johannes Klueh \email{mz228@stud.uni-heidelberg.de}
+}
+
+Other contributors:
+\itemize{
+  \item Marilena Mueller [degree supervisor]
 }
 
 }
