@@ -52,10 +52,9 @@ project_faces <- function(pca, face) {
 pca <- function(images, max_eigenfaces = 0L, standardized=FALSE) {
   stopifnot(is.numeric(max_eigenfaces))
   stopifnot(max_eigenfaces >= 0)
+
   max_eigenfaces <- as.integer(max_eigenfaces)
-
   n <- ncol(images)
-
   mean_image <- 1/n * apply(images, 1, sum)
   diff_to_mean <- images - mean_image
 
@@ -132,12 +131,15 @@ reconstruct_dataset_image <- function(dataset, index) {
   return(as.vector(dataset$vectors %*% matrix(dataset$dataset_coef[,index], ncol=1))+dataset$mean)
 }
 
-# Functions to export
+################################### Functions to export ###################################
+
+#' @export
 load_dataset <- function(path, pattern=NULL, max_images=0L, max_eigenfaces=0L) {
   images <- load_images(path, pattern, max_images)
   pca(images, max_eigenfaces)
 }
 
+#' @export
 show_most_important_eigenfaces <- function(dataset, max_count=1) {
   hor <- 4L
   ver <- 4L
@@ -147,6 +149,7 @@ show_most_important_eigenfaces <- function(dataset, max_count=1) {
   for(i in 1:(hor*ver)) plot(pixmapGrey(dataset$vectors[,i], nrow=64))
 }
 
+#' @export
 show_similar_faces <- function(dataset, image, max_count=1) {
   closest <- closest_matches_image(dataset, image)
 
@@ -159,7 +162,7 @@ show_similar_faces <- function(dataset, image, max_count=1) {
   for(i in 1:(hor*ver - 1)) plot(pixmapGrey(dataset$images[,closest[i]], nrow=64))
 }
 
-
+#' @export
 reconstruct_dataset_images <- function(dataset, indices) {
   indices <- indices[indices <= nrow(dataset$dataset_coef)]
   reconstructions <- sapply(indices, function(x) reconstruct_dataset_image(dataset, x))
@@ -171,6 +174,7 @@ reconstruct_dataset_images <- function(dataset, indices) {
   for(i in 1:(hor*ver)) plot(pixmapGrey(reconstructions[,i], nrow=64))
 }
 
+#' @export
 change_max_eigenfaces <- function(dataset, max_eigenfaces=0L) {
   num_eigenfaces <- min(max_eigenfaces, length(dataset$all_values))
   if(length(dataset$all_values) > 0) {

@@ -6,7 +6,7 @@
 \alias{REigenfaces-package}
 \title{REigenfaces: Face Recognition using Eigenfaces}
 \description{
-Eigenfaces are an approach to recognize faces using \emph{principal component analysis} (PCA), established in 1991. Even though the technique has lost popularity in recent years, it is still widely used to visualize the concept and results of PCA and introduce beginners to machine learning. This R package was developed as a part of the 2020 R programming course at Heidelberg University. It provides functions to display the most important eigenfaces of a data set, display similar faces and display eigenfaces with a reduced amount of principle components.
+Eigenfaces are an approach to recognize faces using principal component analysis (PCA), established in 1991. Even though the technique has lost popularity in recent years, it is still widely used to visualize the concept and results of PCA and introduce beginners to machine learning. This R package was developed as a part of the 2020 R programming course at Heidelberg University. It provides functions to display the most important eigenfaces of a data set, display similar faces and display eigenfaces with a reduced amount of principle components.
 }
 \details{
 The REigenfaces package contains the following functions:
