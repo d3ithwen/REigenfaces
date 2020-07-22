@@ -18,10 +18,11 @@ knitr::opts_chunk$set(
 
 # 1. Usage
 
+## Getting Started
+
 To use the **REigenfaces** package, you first need to install and (optionally) load it via:
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-devtools::install("C:/Users/eding/OneDrive/Dokumente/Uni/4.Semester/R-Kurs/REigenfaces")
 library(REigenfaces)
 ```
 
@@ -29,20 +30,19 @@ library(REigenfaces)
 `library(REigenfaces)`
 
 For the remainder of this example, we will use the *lfwcrop_grey* training data set that can be found on <https://towardsdatascience.com/eigenfaces-recovering-humans-from-ghosts-17606c328184> (21.07.2020). Feel free to use a different data set or your own training data. Note that a controlled and uniform lightning environment is important in order for the eigenface method to work properly, as will be explained in section 3.  
-  
-To load the training data set and determine the eigenfaces use:
-```{r, include = FALSE}
-path_to_data <- "C:/Users/eding/Downloads/lfwcrop_grey/faces"
-```
 
-```{r warning=FALSE}
-dataset <- REigenfaces::load_dataset(path_to_data, pattern="(0001)|(0002)|(0003)|(0004)", max_eigenfaces=100L)
-```
-where `path_to_data` is the path to the data as a `character` vector. `pattern` is an optional regular expression. Only file names which match the regular expression will be loaded. Our example data set, there multiple images of the same person. By utilizing the pattern, only a maximum of four images of the same person are used. The number of eigenfaces that will be determined can be adjusted via `max_eigenfaces`. Since all major computations are performed here, this can take quite some time, depending on the size of your data.
+## Load Data
+
+A subset of the *lfwcrop_grey* data set is included in the package as `dataset` (for more information: `?dataset`). To load a different training data set and determine the eigenfaces use:
+
+`my_dataset <- REigenfaces::load_dataset(path_to_data, pattern="(0001)|(0002)|(0003)|(0004)", max_eigenfaces=100L)`
+
+where `path_to_data` is the path to the data as a `character` vector. `pattern` is an optional regular expression. Only file names which match the regular expression will be loaded. In our example data set, there are multiple images of the same person. By utilizing the pattern, only a maximum of four images of the same person are used. The number of eigenfaces that will be determined can be adjusted via `max_eigenfaces`. Since all major computations are performed here, this can take quite some time, depending on the size of your data.  
 
 The `max_eigenfaces` parameter can still be changed afterwards:
 `change_max_eigenfaces(dataset, max_eigenfaces)`
 
+## Display Results
   
 You can now display the n=16 most important eigenfaces of the data set with:
 ```{r warning=FALSE}
@@ -62,5 +62,7 @@ reconstruct_dataset_images(dataset, 1:16)
 # 2. Shiny App
 
 # 3. Eigenfaces
+
+
 
 # 4. Implementation Details
