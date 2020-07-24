@@ -33,7 +33,7 @@
 #'   \item{images}{image vectors of LSWcrop data set}
 #'   \item{all_values}{eigenface eigenvalues for the entire data set}
 #'   \item{all_vectors}{eigenface eigenvectors for the entire data set}
-#'   \item{dataset_coef}{}
+#'   \item{dataset_coef}{coefficients to reconstruct original face image from eigenfaces}
 #' }
 #' @source \url{https://towardsdatascience.com/eigenfaces-recovering-humans-from-ghosts-17606c328184}
 #'
