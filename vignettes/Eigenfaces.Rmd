@@ -1,5 +1,7 @@
 ---
-title: "Eigenfaces"
+title: "REigenfaces"
+author: "Max Edinger"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Eigenfaces}
@@ -14,6 +16,91 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+# 1. Usage
+
+## Getting Started
+
+To use the **REigenfaces** package, you first need to install and (optionally) load it via:
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
 library(REigenfaces)
 ```
+
+`devtools::install("path/to/REigenfaces")`  
+`library(REigenfaces)`
+
+For the remainder of this example, we will use the *lfwcrop_grey* training data set that can be found on <https://towardsdatascience.com/eigenfaces-recovering-humans-from-ghosts-17606c328184> (21.07.2020). Feel free to use a different data set or your own training data. Note that a controlled and uniform lightning environment is important in order for the eigenface method to work properly, as will be explained in section 3.  
+
+## Load Data
+
+A subset of the *lfwcrop_grey* data set is included in the package as `dataset` (for more information: `?dataset`). To load a different training data set and determine the eigenfaces use:
+
+`my_dataset <- REigenfaces::load_dataset(path_to_data, pattern="(0001)|(0002)|(0003)|(0004)", max_images=13000, max_eigenfaces=100L)`
+
+where `path_to_data` is the path to the data as a `character` vector. `pattern` is an optional regular expression. Only file names which match the regular expression will be loaded. In our example data set, there are multiple images of the same person. By utilizing the pattern, only a maximum of four images of the same person are used. Alternatively, you can restict the number of images considered for eigenface computation via `max_images`. The number of eigenfaces that will be determined can be adjusted via `max_eigenfaces`. Since all major computations are performed here, this can take quite some time, depending on the size of your data.  
+
+The `max_eigenfaces` parameter can still be changed afterwards:
+`change_max_eigenfaces(dataset, max_eigenfaces)`
+
+## Display Results
+  
+You can now display the n=16 most important eigenfaces of the data set with:
+```{r warning=FALSE}
+show_most_important_eigenfaces(dataset, 16)
+```
+
+n=16 similar faces in the training data set of image 2 can be displayed as follows:
+```{r warning=FALSE}
+show_similar_faces(dataset, dataset$images[2], 16)
+```
+
+To display the eigenface reconstruction of the original training data images, simply do:  
+```{r warning=FALSE}
+reconstruct_dataset_images(dataset, 1:16)
+```
+
+# 2. Shiny App
+
+# 3. Eigenfaces
+
+## Introduction
+
+Eigenfaces are an approach to recognize faces using principal component analysis (PCA). The concept was introduced by in Sirovich and Kirby in 1987 and adopted and refined by Turk and Pentland in 1991. Even though the technique has lost popularity in recent years, it is still widely used to visualize the concept and results of PCA and introduce beginners to machine learning. 
+
+The basic idea is to find a low dimensional subspace of the high dimensional image space. Consider a set of $d$ images. Using the eigenfaces approach, it is possible to find a basis set of $k << d$ images. They are determined by the $k$ directions of maximum variance. PCA is used to find the $k$ vectors $\epsilon_{1},…,\epsilon_{k}$ spanning the low dimensional space. Turk and Pentland called them *eigenfaces*. All face images of the training data set can now be reconstructed by linear combinations of the eigenfaces. As a result, data and statistical complexity can be reduced significantly.
+
+## Implementation
+
+Consider a training data set of $d$ face images $I_{1},...,I_{d}$ with $I_{i} \in \mathbb{R}^{m\times n}$. The eigenface generation can be summarised as follows: 
+
+1. Convert the face images $I_{i} \in \mathbb{R}^{m\times n}$ to face vectors $I_{i} \in \mathbb{R}^{mn}$ by concatenating the pixel rows.
+
+2. Compute the mean image: $\bar{I} := \frac{1}{d} \sum_{i=1}^{d}{I_i}$.
+
+3. Since we are interested in variance, normalize the face vectors by subtracting the mean face: $\Phi_i :=  I_i - \bar{I}$. 
+
+4. Let $A := [\Phi_1...\Phi_d] \in \mathbb{R}^{mn \times d}$.
+
+5. Compute the covariance matrix $C = AA^T \in \mathbb{R}^{mn \times mn}$ (or $C = A^TA \in \mathbb{R}^{d \times d}$ to reduce dimensionality, since $d < mn$ in many cases).
+
+6. Compute and sort eigenvalues $|\lambda_1| \geq ... \geq |\lambda_d|$ and corresponding eigenvectors $\epsilon_1,...,\epsilon_d$ of the covariance matrix $C$. The first $k$ eigenvectors $\epsilon_1,...,\epsilon_k$ with an arbitrary $\mathbb{N} \ni k << d$ are the eigenfaces.
+
+## Pros and Cons
+
+**Pros**:  
+
+* Reduction of statistical complexity $\rightarrow$ fast.  
+* Suitable for large data sets.  
+* Easy to code.  
+* Visualize the concept of PCA.  
+
+**Cons**:   
+
+* Only works in a constraint environment (lightning, background, position of faces, …).  
+* Difficulties capturing facial expressions.  
+
+
+## References:
+* https://en.wikipedia.org/wiki/Eigenface (24.07.2020).
+* Matthew Turk, Alex Petland: "Eigenfaces for Recognition". Journal of Cognitive Neuroscience, 1991, p. 71–86.
+* L. Sirovich; M. Kirby (1987): "Low-dimensional procedure for the characterization of human faces". Journal of the Optical Society of America A.4(3), p. 519–524.

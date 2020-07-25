@@ -1,7 +1,20 @@
 #' @details
-#' mypkg is an awesome package.
-#' It contains awesome functions, like \code{\link{add}}.
-#' @references \url{https://de.wikipedia.org/wiki/Eigengesichter}
+#' The REigenfaces package contains the following functions:
+##' \itemize{
+##'  \item{\code{\link{load_dataset}}}
+##'  \item{\code{\link{show_most_important_eigenfaces}}}
+##'  \item{\code{\link{show_similar_faces}}}
+##'  \item{\code{\link{reconstruct_dataset_images}}}
+##'  \item{\code{\link{change_max_eigenfaces}}}
+##' }
+#' To learn more about REigenfaces, refer to the vignettes and function documentations.
+#' @references
+#' Useful links:
+#' \itemize{
+#'   \item{\url{https://en.wikipedia.org/wiki/Eigenface}: general information}
+#'   \item{\url{https://www.bytefish.de/pdf/eigenfaces.pdf}: mathematical details and examples}
+#'   \item{\url{https://towardsdatascience.com/eigenfaces-recovering-humans-from-ghosts-17606c328184}: implementation details and training data (\code{lfwcrop_grey.zip})}
+#' }
 #' @keywords internal
 "_PACKAGE"
 "_PACKAGE"
@@ -10,4 +23,6 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 ## usethis namespace: end
+#' @import pixmap
+#' @importFrom "graphics" "par"
 NULL

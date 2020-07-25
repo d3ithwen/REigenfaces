@@ -1,28 +1,27 @@
 Package: REigenfaces
-Title: What the Package Does (One Line, Title Case)
+Title: Face Recognition using Eigenfaces
 Version: 0.0.0.9000
 Authors@R: 
-    c(person(given = "First",
-           family = "Last",
+    c(person(given = "Bjarn",
+           family = " de Jong",
            role = c("aut"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID")),
-      person(given = "First",
-           family = "Last",
+           email = " B.de_Jong@stud.uni-heidelberg.de"),
+      person(given = "Daniel",
+           family = "Kliemann",
            role = c("aut"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID")),
-      person(given = "First",
-           family = "Last",
+           email = "D.Kliemann@stud.uni-heidelberg.de"),
+      person(given = "Johannes",
+           family = "Klueh",
            role = c("aut"),
-           email = "first.last@example.com",
-           comment = c(ORCID = "YOUR-ORCID-ID")),
+           email = "mz228@stud.uni-heidelberg.de"),
       person(given = "Max",
            family = "Edinger",
            role = c("aut", "cre"),
-           email = "iu220@stud.uni-heidelberg.de",
-           comment = c(ORCID = "YOUR-ORCID-ID")))
-Description: What the package does (one paragraph).
+           email = "iu220@stud.uni-heidelberg.de"),
+      person(given = "Marilena",
+             family = "Mueller",
+             role = c("dgs")))
+Description: Eigenfaces are an approach to recognize faces using principal component analysis (PCA), established in 1991. Even though the technique has lost popularity in recent years, it is still widely used to visualize the concept and results of PCA and introduce beginners to machine learning. This R package was developed as a part of the 2020 R programming course at Heidelberg University. It provides functions to display the most important eigenfaces of a data set, display similar faces and display eigenfaces with a reduced amount of principle components.    
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
@@ -35,3 +34,5 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
+Depends: 
+    R (>= 2.10)
