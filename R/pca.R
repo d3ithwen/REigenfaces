@@ -253,17 +253,9 @@ change_max_eigenfaces <- function(dataset, max_eigenfaces=0L) {
 }
 
 
-<<<<<<< HEAD
-#images <- load_images("dataset/", pattern="(0005)", max_images=1000L)
-#dataset <- load_dataset("dataset/", pattern="(0001)|(0002)|(0003)|0004)", max_eigenfaces=100L)
-#
-#show_most_important_eigenfaces(dataset, 16)
-#show_similar_faces(dataset, images[,1], 16)
-#reconstruct_dataset_images(dataset, 1:16)
-=======
+
 # dataset <- load_dataset("dataset/", pattern="(0001)|(0002)|(0003)|(0004)", max_images=13000, max_eigenfaces=100L)
 #
 # show_most_important_eigenfaces(dataset, 16)
 # show_similar_faces(dataset, dataset$images[1], 16)
 # reconstruct_dataset_images(dataset, 1:16)
->>>>>>> 07886d6a77b64b343f3d230ead48c9cdaaa44a0e
