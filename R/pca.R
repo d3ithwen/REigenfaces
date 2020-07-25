@@ -52,10 +52,9 @@ project_faces <- function(pca, face) {
 pca <- function(images, max_eigenfaces = 0L, standardized=FALSE) {
   stopifnot(is.numeric(max_eigenfaces))
   stopifnot(max_eigenfaces >= 0)
+
   max_eigenfaces <- as.integer(max_eigenfaces)
-
   n <- ncol(images)
-
   mean_image <- 1/n * apply(images, 1, sum)
   diff_to_mean <- images - mean_image
 
@@ -132,13 +131,40 @@ reconstruct_dataset_image <- function(dataset, index) {
   return(as.vector(dataset$vectors %*% matrix(dataset$dataset_coef[,index], ncol=1))+dataset$mean)
 }
 
-# Functions to export
+################################### Functions to export ###################################
+
+#' Load Training Data and Compute Eigenfaces.
+#'
+#' The specified data set is loaded and face images are converted to face vectors. The mean face is subtracted from all face vectors. Subsequently, the covariance matrix is computed and eigenvalues and corresponding eigenvectors (the eigenfaces) are determined.
+#'
+#' @param path character; Specify the path to the data set. (required)
+#' @param pattern character; Regular expression used to filter images of the data set. Only image files matching the RegEx will be used. (optional)
+#' @param max_images integer; Maximum number of images used for eigenface computation. (optional)
+#' @param max_eigenfaces integer; Number of eigenfaces that will be computed. (optional)
+#' @return A list containing the eigenfaces and other information (\code{?dataset} for more information).
+#' @examples
+#' \dontrun{
+#' my_dataset <- REigenfaces::load_dataset("C:/Users/me/data/lfwcrop_grey/faces",
+#'                                         max_images=13000,
+#'                                         pattern="(0001)|(0002)|(0003)|(0004)",
+#'                                         max_eigenfaces=100L)
+#' }
+#' @export
 load_dataset <- function(path, pattern=NULL, max_images=0L, max_eigenfaces=0L) {
   images <- load_images(path, pattern, max_images)
   stopifnot("No matching images found" = length(images)>0)
   pca(images, max_eigenfaces)
 }
 
+#' Display Most Important Eigenfaces.
+#'
+#' The \code{max_count} most important eigenfaces (eigenvectors corresponding to the \code{max_count} eigenvalues with highest absolute value) are displayed.
+#'
+#' @param dataset list; List returned by load_dataset() with computed eigenfaces. (required)
+#' @param max_count integer; Number of eigenfaces that will be displayed. (optional)
+#' @examples
+#' show_most_important_eigenfaces(dataset, 16)
+#' @export
 show_most_important_eigenfaces <- function(dataset, max_count=1) {
   stopifnot("dataset must be list of 7 and of class 'eigenface'" = typeof(dataset)=="list" & length(dataset)==7 & class(dataset)=="eigenface")
   stopifnot("max_count must be of number type" = typeof(max_count) == "double")
@@ -150,6 +176,16 @@ show_most_important_eigenfaces <- function(dataset, max_count=1) {
   for(i in 1:(hor*ver)) plot(pixmapGrey(dataset$vectors[,i], nrow=64))
 }
 
+#' Display Similar Faces.
+#'
+#' \code{max_count} similar faces of the training data set are displayed.
+#'
+#' @param dataset list; List returned by load_dataset() with computed eigenfaces. (required)
+#' @param image numeric; Image, for which similar faces are determined. (required)
+#' @param max_count integer; Number of similar faces that will be displayed. (optional)
+#' @examples
+#' show_similar_faces(dataset, dataset$images[1], 16)
+#' @export
 show_similar_faces <- function(dataset, image, max_count=1) {
   stopifnot("dataset must be list of 7 and of class 'eigenface'" = typeof(dataset)=="list" & length(dataset)==7 & class(dataset)=="eigenface")
   stopifnot("image must be double vector" = typeof(image) == "double" & is.vector(image))
@@ -165,7 +201,15 @@ show_similar_faces <- function(dataset, image, max_count=1) {
   for(i in 1:(hor*ver - 1)) plot(pixmapGrey(dataset$images[,closest[i]], nrow=64))
 }
 
-
+#' Reconstruct Faces Using Eigenfaces.
+#'
+#' Reconstruct the original training data faces by linear combinations of eigenfaces.
+#'
+#' @param dataset list; List returned by load_dataset() with computed eigenfaces. (required)
+#' @param indices integer; Indices of the original images that will be reconstructed. (required)
+#' @examples
+#' reconstruct_dataset_images(dataset, 1:16)
+#' @export
 reconstruct_dataset_images <- function(dataset, indices) {
   stopifnot("dataset must be list of 7 and of class 'eigenface'" = typeof(dataset)=="list" & length(dataset)==7 & class(dataset)=="eigenface")
   stopifnot("indices must be numeric" = class(indices) == "numeric" & is.vector(indices))
@@ -179,6 +223,16 @@ reconstruct_dataset_images <- function(dataset, indices) {
   for(i in 1:(hor*ver)) plot(pixmapGrey(reconstructions[,i], nrow=64))
 }
 
+#' Adjust Number of Eigenfaces.
+#'
+#' Change the number of eigenfaces originally specified as \code{max_eigenfaces} in \code{load_dataset}.
+#'
+#' @param dataset list; List returned by load_dataset() with computed eigenfaces. (required)
+#' @param max_eigenfaces integer; Number of eigenfaces that will be computed. (optional)
+#' @return A list containing the eigenfaces and other information (\code{?dataset} for more information) with new number \code{max_eigenfaces} of eigenfaces.
+#' @examples
+#' change_max_eigenfaces(dataset, 42)
+#' @export
 change_max_eigenfaces <- function(dataset, max_eigenfaces=0L) {
   stopifnot("dataset must be list of 7 and of class 'eigenface'" = typeof(dataset)=="list" & length(dataset)==7 & class(dataset)=="eigenface")
   stopifnot("max_eigenfaces must be numeric" = class(max_eigenfaces) == "numeric")
@@ -199,9 +253,17 @@ change_max_eigenfaces <- function(dataset, max_eigenfaces=0L) {
 }
 
 
+<<<<<<< HEAD
 #images <- load_images("dataset/", pattern="(0005)", max_images=1000L)
 #dataset <- load_dataset("dataset/", pattern="(0001)|(0002)|(0003)|0004)", max_eigenfaces=100L)
 #
 #show_most_important_eigenfaces(dataset, 16)
 #show_similar_faces(dataset, images[,1], 16)
 #reconstruct_dataset_images(dataset, 1:16)
+=======
+# dataset <- load_dataset("dataset/", pattern="(0001)|(0002)|(0003)|(0004)", max_images=13000, max_eigenfaces=100L)
+#
+# show_most_important_eigenfaces(dataset, 16)
+# show_similar_faces(dataset, dataset$images[1], 16)
+# reconstruct_dataset_images(dataset, 1:16)
+>>>>>>> 07886d6a77b64b343f3d230ead48c9cdaaa44a0e
