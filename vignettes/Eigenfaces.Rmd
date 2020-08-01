@@ -54,6 +54,10 @@ n=16 similar faces in the training data set of image 2 can be displayed as follo
 show_similar_faces(dataset, dataset$images[2], 16)
 ```
 
+If you want to display similar faces in the training data for a new face, you can do so using  
+`image <- load_images(path_to_images, pattern="(0001)|(0002)|(0003)|(0004)", max_images=1L)` and
+`show_similar_faces(dataset, image[1], 16)` afterwards.  
+
 To display the eigenface reconstruction of the original training data images, simply do:  
 ```{r warning=FALSE}
 reconstruct_dataset_images(dataset, 1:16)

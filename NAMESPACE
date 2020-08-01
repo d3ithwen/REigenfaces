@@ -3,6 +3,7 @@
 export(add)
 export(change_max_eigenfaces)
 export(load_dataset)
+export(load_images)
 export(reconstruct_dataset_images)
 export(show_most_important_eigenfaces)
 export(show_similar_faces)
