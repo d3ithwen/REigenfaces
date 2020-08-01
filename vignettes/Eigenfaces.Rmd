@@ -39,8 +39,8 @@ A subset of the *lfwcrop_grey* data set is included in the package as `dataset` 
 
 where `path_to_data` is the path to the data as a `character` vector. `pattern` is an optional regular expression. Only file names which match the regular expression will be loaded. In our example data set, there are multiple images of the same person. By utilizing the pattern, only a maximum of four images of the same person are used. Alternatively, you can restict the number of images considered for eigenface computation via `max_images`. The number of eigenfaces that will be determined can be adjusted via `max_eigenfaces`. Since all major computations are performed here, this can take quite some time, depending on the size of your data.  
 
-The `max_eigenfaces` parameter can still be changed afterwards:
-`change_max_eigenfaces(dataset, max_eigenfaces)`
+The `max_eigenfaces` parameter can still be changed afterwards:  
+`my_dataset <- change_max_eigenfaces(my_dataset, max_eigenfaces=42L)`
 
 ## Display Results
   

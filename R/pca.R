@@ -165,7 +165,13 @@ reconstruct_dataset_image <- function(dataset, index) {
 #' }
 #' @export
 load_dataset <- function(path, pattern=NULL, max_images=0L, max_eigenfaces=0L) {
+  stopifnot("path must be of type character" = is.character(path))
+  if(!is.null(pattern)) stopifnot("pattern must be of type character" = is.character(pattern))
+  stopifnot("max_images must be numeric" = is.numeric(max_images))
+  stopifnot("max_eigenfaces must be numeric" = is.numeric(max_eigenfaces))
+
   images <- load_images(path, pattern, max_images)
+  stopifnot("No matching images found. Make sure that your path and pattern are correct and max images is > 0." = !is.null(dim(images)))
   pca(images, max_eigenfaces)
 }
 
@@ -179,6 +185,9 @@ load_dataset <- function(path, pattern=NULL, max_images=0L, max_eigenfaces=0L) {
 #' show_most_important_eigenfaces(dataset, 16)
 #' @export
 show_most_important_eigenfaces <- function(dataset, max_count=1) {
+  stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
+  stopifnot("max_count must be numeric" = is.numeric(max_count))
+
   hor <- 4L
   ver <- 4L
   par(mfrow=c(ver,hor),mar=c(0,0,0,0))
@@ -198,6 +207,10 @@ show_most_important_eigenfaces <- function(dataset, max_count=1) {
 #' show_similar_faces(dataset, dataset$images[1], 16)
 #' @export
 show_similar_faces <- function(dataset, image, max_count=1) {
+  stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
+  stopifnot("image must be a double vector" = is.double(image))
+  stopifnot("max_count must be numeric" = is.numeric(max_count))
+
   closest <- closest_matches_image(dataset, image)
 
   hor <- 4L
@@ -219,6 +232,9 @@ show_similar_faces <- function(dataset, image, max_count=1) {
 #' reconstruct_dataset_images(dataset, 1:16)
 #' @export
 reconstruct_dataset_images <- function(dataset, indices) {
+  stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
+  stopifnot("indices must be numeric" = is.numeric(indices))
+
   indices <- indices[indices <= nrow(dataset$dataset_coef)]
   reconstructions <- sapply(indices, function(x) reconstruct_dataset_image(dataset, x))
 
@@ -240,6 +256,9 @@ reconstruct_dataset_images <- function(dataset, indices) {
 #' change_max_eigenfaces(dataset, 42)
 #' @export
 change_max_eigenfaces <- function(dataset, max_eigenfaces=0L) {
+  stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))#
+  stopifnot("max_eigenfaces must be numeric" = is.numeric(max_eigenfaces))
+
   num_eigenfaces <- min(max_eigenfaces, length(dataset$all_values))
   if(length(dataset$all_values) > 0) {
     if(num_eigenfaces >= 3) {
