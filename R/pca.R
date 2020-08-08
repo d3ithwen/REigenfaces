@@ -171,7 +171,7 @@ load_pgm_images <- function(path, pattern=NULL, max_images=0L) {
   stopifnot("path must be of type character" = is.character(path))
   if(!is.null(pattern)) stopifnot("pattern must be of type character" = is.character(pattern))
   stopifnot("max_images must be numeric" = is.numeric(max_images))
-  stopifnot(max_images >= 0)
+  stopifnot("max_images must be positive or 0" = max_images >= 0)
   max_images <- as.integer(max_images)
 
   image_files <- list.files(path, pattern, full.names=TRUE)

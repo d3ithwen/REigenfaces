@@ -1,4 +1,15 @@
-# TODO: test load_images()
+######################### testing load_images() #########################
+
+test_that("load_images() can handle wrong input", {
+  expect_error(load_pgm_images(2L), "path must be of type character")
+  expect_error(load_pgm_images("", pattern = 42L), "pattern must be of type character")
+  expect_error(load_pgm_images("", max_images = "foo"), "max_images must be numeric")
+  expect_error(load_pgm_images("", max_images = -10), "max_images must be positive or 0")
+})
+
+test_that("load_images() throws error if no images found", {
+  expect_error(load_pgm_images(""), "No matching images found. Make sure that your path and pattern are correct and max images is >= 0.")
+})
 
 ######################### testing load_dataset() #########################
 
@@ -21,26 +32,26 @@ test_that("load_dataset() returns correct data type and class", {
 
 empty_dataset <- list()
 
-######################### testing show_most_important_eigenfaces() #########################
+######################### testing most_important_eigenfaces() #########################
 
 test_that("show_most_important_eigenfaces can handle wrong input", {
-  expect_error(show_most_important_eigenfaces(empty_dataset), "dataset must be of class eigeface and type list")
-  expect_error(show_most_important_eigenfaces(dataset, "foo"), "max_count must be numeric")
+  expect_error(most_important_eigenfaces(empty_dataset), "dataset must be of class eigeface and type list")
+  expect_error(most_important_eigenfaces(dataset, "foo"), "max_count must be numeric")
 })
 
-######################### testing show_similar_faces() #########################
+######################### testing similar_faces_indices() #########################
 
 test_that("show_similar_faces can handle wrong input", {
-  expect_error(show_similar_faces(empty_dataset), "dataset must be of class eigeface and type list")
-  expect_error(show_similar_faces(dataset, "foo"), "image must be a double vector")
-  expect_error(show_similar_faces(dataset, c(1,2,3), "bar"), "max_count must be numeric")
+  expect_error(similar_faces_indices(empty_dataset), "dataset must be of class eigeface and type list")
+  expect_error(similar_faces_indices(dataset, "foo"), "image must be a double vector")
+  expect_error(similar_faces_indices(dataset, c(1,2,3), "bar"), "max_count must be numeric")
 })
 
-######################### testing reconstruct_dataset_images() #########################
+######################### testing reconstructed_dataset_images() #########################
 
 test_that("reconstruct_dataset_images can handle wrong dataset", {
-  expect_error(reconstruct_dataset_images(empty_dataset), "dataset must be of class eigeface and type list")
-  expect_error(reconstruct_dataset_images(dataset, "foo"), "indices must be numeric")
+  expect_error(reconstructed_dataset_images(empty_dataset), "dataset must be of class eigeface and type list")
+  expect_error(reconstructed_dataset_images(dataset, "foo"), "indices must be numeric")
 })
 
 ######################### testing change_max_eigenfaces() #########################
