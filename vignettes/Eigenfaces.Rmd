@@ -33,34 +33,51 @@ For the remainder of this example, we will use the *lfwcrop_grey* training data 
 
 ## Load Data
 
-A subset of the *lfwcrop_grey* data set is included in the package as `dataset` (for more information: `?dataset`). To load a different training data set and determine the eigenfaces use:
+A subset of the *lfwcrop_grey* data set is included in the package as `images` and the computed eigenfaces as `dataset` (for more information: `?images`, `?dataset`). To load a different training data set and determine the eigenfaces use:
 
-`my_dataset <- REigenfaces::load_dataset(path_to_data, pattern="(0001)|(0002)|(0003)|(0004)", max_images=13000, max_eigenfaces=100L)`
+`my_images <- load_pgm_images("path/to/data", pattern="(0001)|(0002)|(0003)|(0004)", max_images=1000L)`    
+to load the images in pgm format and  
+  
+`my_dataset <- load_dataset(my_dataset_images, max_eigenfaces=100L)`  
+  
+to compute the eigenfaces. `"path/to/data"` is the path to the data as a `character` vector. `pattern` is an optional regular expression. Only file names which match the regular expression will be loaded. In our example data set, there are multiple images of the same person. By utilizing the pattern, only a maximum of four images of the same person are used. Alternatively, you can restict the number of images considered for eigenface computation via `max_images`. The number of eigenfaces that will be determined can be adjusted via `max_eigenfaces`. Since all major computations are performed here, this can take quite some time, depending on the size of your data.  
+  
+To display the loaded images use  
 
-where `path_to_data` is the path to the data as a `character` vector. `pattern` is an optional regular expression. Only file names which match the regular expression will be loaded. In our example data set, there are multiple images of the same person. By utilizing the pattern, only a maximum of four images of the same person are used. Alternatively, you can restict the number of images considered for eigenface computation via `max_images`. The number of eigenfaces that will be determined can be adjusted via `max_eigenfaces`. Since all major computations are performed here, this can take quite some time, depending on the size of your data.  
-
-The `max_eigenfaces` parameter can still be changed afterwards:  
-`my_dataset <- change_max_eigenfaces(my_dataset, max_eigenfaces=42L)`
+```{r warning=FALSE}
+show_images(images, dataset$image_size)
+```
 
 ## Display Results
   
-You can now display the n=16 most important eigenfaces of the data set with:
+You can now display the 16 most important eigenfaces of the data set with:
 ```{r warning=FALSE}
-show_most_important_eigenfaces(dataset, 16)
+faces <- most_important_eigenfaces(dataset, 16L)
+show_images(faces, dataset$image_size)
+```
+  
+The mean face of the training data set can be displayed via
+```{r warning=FALSE}
+show_images(dataset$mean, dataset$image_size)
 ```
 
-n=16 similar faces in the training data set of image 2 can be displayed as follows:
+We now want to search for nine faces in our training data set, which are similar to Billy Joels face. To do so, we first need to load the image:  
+  
+`billy <- load_pgm_images("path/to/image", pattern="Billy_Joel")`
 ```{r warning=FALSE}
-show_similar_faces(dataset, dataset$images[2], 16)
-```
-
-If you want to display similar faces in the training data for a new face, you can do so using  
-`image <- load_images(path_to_images, pattern="(0001)|(0002)|(0003)|(0004)", max_images=1L)` and
-`show_similar_faces(dataset, image[1], 16)` afterwards.  
-
+show_images(billy, dataset$image_size)
+``` 
+  
+Afterwards, we can obtain the indices of the similar faces using  
+```{r warning=FALSE}
+print(similar_faces_indices(dataset, billy, max_count=9L))
+```  
+The output comprises the names of the similar images and their indices in the `dataset` object sorted by descending similarity as well as coefficients, indicating how similar the faces are. As we can see, Billy Joel is already in our data set, because he is the first name in the list with a coefficient of 0.  
+  
 To display the eigenface reconstruction of the original training data images, simply do:  
 ```{r warning=FALSE}
-reconstruct_dataset_images(dataset, 1:16)
+faces <- reconstructed_dataset_images(dataset, 1:16)
+show_images(faces, dataset$image_size)
 ```
 
 # 2. Shiny App

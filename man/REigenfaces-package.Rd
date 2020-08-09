@@ -11,11 +11,12 @@ Eigenfaces are an approach to recognize faces using principal component analysis
 \details{
 The REigenfaces package contains the following functions:
 \itemize{
+\item{\code{\link{load_pgm_images}}}
 \item{\code{\link{load_dataset}}}
-\item{\code{\link{show_most_important_eigenfaces}}}
-\item{\code{\link{show_similar_faces}}}
-\item{\code{\link{reconstruct_dataset_images}}}
-\item{\code{\link{change_max_eigenfaces}}}
+\item{\code{\link{show_images}}}
+\item{\code{\link{most_important_eigenfaces}}}
+\item{\code{\link{similar_faces_indices}}}
+\item{\code{\link{reconstructed_dataset_images}}}
 }
 To learn more about REigenfaces, refer to the vignettes and function documentations.
 }

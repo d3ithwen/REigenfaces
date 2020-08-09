@@ -153,9 +153,9 @@ reconstruct_dataset_image <- function(dataset, index) {
 
 ################################### Functions to export ###################################
 
-#' Load Images.
+#' Load pgm Images.
 #'
-#' Load (new) image(s) to search similar faces in the training data set.
+#' Load (new) image(s) to compute eigenfaces or search similar faces in the training data set. Only images in the pgm image format (greymap) are supported.
 #'
 #' @param path character; Specify the path to the image(s). (required)
 #' @param pattern character; Regular expression used to filter images of the data set. Only image files matching the RegEx will be used. (optional)
@@ -163,8 +163,9 @@ reconstruct_dataset_image <- function(dataset, index) {
 #' @return A double vector containing the loaded image(s).
 #' @examples
 #' \dontrun{
-#' images <- load_images("C:/Users/me/data/images", pattern="(0001)|(0002)|(0003)|(0004)",
-#'                        max_images=1L)
+#' images <- load_pgm_images("C:/Users/me/data/lfwcrop_grey/faces",
+#'                           pattern="(0001)|(0002)|(0003)|(0004)",
+#'                           max_images=1000L)
 #' }
 #' @export
 load_pgm_images <- function(path, pattern=NULL, max_images=0L) {
@@ -197,19 +198,15 @@ load_pgm_images <- function(path, pattern=NULL, max_images=0L) {
 
 #' Load Training Data and Compute Eigenfaces.
 #'
-#' The specified data set is loaded and face images are converted to face vectors. The mean face is subtracted from all face vectors. Subsequently, the covariance matrix is computed and eigenvalues and corresponding eigenvectors (the eigenfaces) are determined.
+#' The specified data set is loaded (images that have been loaded with \code{load_pgm_images} before) and face images are converted to face vectors. The mean face is subtracted from all face vectors. Subsequently, the covariance matrix is computed and eigenvalues and corresponding eigenvectors (the eigenfaces) are determined.
 #'
-#' @param path character; Specify the path to the data set. (required)
-#' @param pattern character; Regular expression used to filter images of the data set. Only image files matching the RegEx will be used. (optional)
-#' @param max_images integer; Maximum number of images used for eigenface computation. (optional)
+#' @param images double array; Images for which eigenfaces will be computed. (required)
 #' @param max_eigenfaces integer; Number of eigenfaces that will be computed. (optional)
+#' @param standardized logical; Specify whether or not images should be standerdized (subtract mean image from every image). (optional)
 #' @return A list containing the eigenfaces and other information (\code{?dataset} for more information).
 #' @examples
 #' \dontrun{
-#' my_dataset <- REigenfaces::load_dataset("C:/Users/me/data/lfwcrop_grey/faces",
-#'                                         max_images=13000,
-#'                                         pattern="(0001)|(0002)|(0003)|(0004)",
-#'                                         max_eigenfaces=100L)
+#' my_dataset <- load_dataset(my_dataset_images, max_eigenfaces=100L, standardized=TRUE)
 #' }
 #' @export
 load_dataset <- function(images, max_eigenfaces=0L, standardized=TRUE) {
@@ -227,14 +224,15 @@ load_dataset <- function(images, max_eigenfaces=0L, standardized=TRUE) {
   pca(images, max_eigenfaces, standardized)
 }
 
-#' Display Most Important Eigenfaces.
+#' Most Important Eigenfaces.
 #'
-#' The \code{max_count} most important eigenfaces (eigenvectors corresponding to the \code{max_count} eigenvalues with highest absolute value) are displayed.
+#' The \code{max_count} most important eigenfaces (eigenvectors corresponding to the \code{max_count} eigenvalues with highest absolute value) are returned. They can be displayed using the \code{show_images} function.
 #'
 #' @param dataset list; List returned by load_dataset() with computed eigenfaces. (required)
 #' @param max_count integer; Number of eigenfaces that will be displayed. (optional)
+#' @return double vector containing the \code{max_count} most important eigenfaces.
 #' @examples
-#' show_most_important_eigenfaces(dataset, 16)
+#' faces <- most_important_eigenfaces(dataset, 16L)
 #' @export
 most_important_eigenfaces <- function(dataset, max_count=1L) {
   stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
@@ -244,15 +242,16 @@ most_important_eigenfaces <- function(dataset, max_count=1L) {
   return(dataset$eigenfaces[,4:(count+3)])
 }
 
-#' Display Similar Faces.
+#' Similar Faces.
 #'
-#' \code{max_count} similar faces of the training data set are displayed.
+#' The indices of \code{max_count} similar faces of the training data set are returned.
 #'
 #' @param dataset list; List returned by load_dataset() with computed eigenfaces. (required)
 #' @param image numeric; Image, for which similar faces are determined. (required)
 #' @param max_count integer; Number of similar faces that will be displayed. (optional)
+#' @return todo
 #' @examples
-#' show_similar_faces(dataset, dataset$images[1], 16)
+#' similar_faces_indices(dataset, billy, max_count=9L)
 #' @export
 similar_faces_indices <- function(dataset, image, max_count=1L) {
   stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
@@ -275,8 +274,9 @@ similar_faces_indices <- function(dataset, image, max_count=1L) {
 #'
 #' @param dataset list; List returned by load_dataset() with computed eigenfaces. (required)
 #' @param indices integer; Indices of the original images that will be reconstructed. (required)
+#' @return double vector containing the eigenface reconstruction of the original images.
 #' @examples
-#' reconstruct_dataset_images(dataset, 1:16)
+#' faces <- reconstructed_dataset_images(dataset, 1:16)
 #' @export
 reconstructed_dataset_images <- function(dataset, indices) {
   stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
@@ -288,6 +288,15 @@ reconstructed_dataset_images <- function(dataset, indices) {
   return(reconstructions)
 }
 
+#' Show Images.
+#'
+#' Show images that have been loaded via \code{load_pgm_images} or eigenfaces that have been computed using \code{load_dataset} or \code{most_important_eigenfaces} or \code{reconstructed_dataset_images}.
+#'
+#' @param images double; Vector containing the images that will be displayed. (required)
+#' @param size integer; Resolution of the image(s). (required)
+#' @examples
+#' show_images(billy, dataset$image_size)
+#' @export
 show_images <- function(images, size) {
   stopifnot(length(size) == 2)
   stopifnot(prod(size) == nrow(images))

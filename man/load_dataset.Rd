@@ -4,28 +4,23 @@
 \alias{load_dataset}
 \title{Load Training Data and Compute Eigenfaces.}
 \usage{
-load_dataset(path, pattern = NULL, max_images = 0L, max_eigenfaces = 0L)
+load_dataset(images, max_eigenfaces = 0L, standardized = TRUE)
 }
 \arguments{
-\item{path}{character; Specify the path to the data set. (required)}
-
-\item{pattern}{character; Regular expression used to filter images of the data set. Only image files matching the RegEx will be used. (optional)}
-
-\item{max_images}{integer; Maximum number of images used for eigenface computation. (optional)}
+\item{images}{double array; Images for which eigenfaces will be computed. (required)}
 
 \item{max_eigenfaces}{integer; Number of eigenfaces that will be computed. (optional)}
+
+\item{standardized}{logical; Specify whether or not images should be standerdized (subtract mean image from every image). (optional)}
 }
 \value{
 A list containing the eigenfaces and other information (\code{?dataset} for more information).
 }
 \description{
-The specified data set is loaded and face images are converted to face vectors. The mean face is subtracted from all face vectors. Subsequently, the covariance matrix is computed and eigenvalues and corresponding eigenvectors (the eigenfaces) are determined.
+The specified data set is loaded (images that have been loaded with \code{load_pgm_images} before) and face images are converted to face vectors. The mean face is subtracted from all face vectors. Subsequently, the covariance matrix is computed and eigenvalues and corresponding eigenvectors (the eigenfaces) are determined.
 }
 \examples{
 \dontrun{
-my_dataset <- REigenfaces::load_dataset("C:/Users/me/data/lfwcrop_grey/faces",
-                                        max_images=13000,
-                                        pattern="(0001)|(0002)|(0003)|(0004)",
-                                        max_eigenfaces=100L)
+my_dataset <- load_dataset(my_dataset_images, max_eigenfaces=100L, standardized=TRUE)
 }
 }

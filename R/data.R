@@ -1,7 +1,21 @@
 #' Eigenfaces of LFWcrop data set.
 #'
+#' 50 eigenfaces of 100 LSWcrop images of celebrities. Please refer to \code{?images} for more information.
 #'
-#' About 100 LSWcrop images of celebrities and 100 eigenfaces.
+#' @format A list with 5 entires:
+#' \describe{
+#'   \item{eigenfaces}{n = max_eigenfaces eigenfaces/eigenvectors}
+#'   \item{mean}{the mean image of the data set}
+#'   \item{image_size}{resolution of the images}
+#'   \item{std_values}{normalized pixel values (original - mean)}
+#'   \item{image_coef}{coefficients to reconstruct original face image from eigenfaces}
+#' }
+"dataset"
+
+#' Subset of LFWcrop data set.
+#'
+#'
+#' About 100 LSWcrop images of celebrities loaded with \code{load_pgm_images}.
 #' LFWcrop is a cropped version of the Labeled Faces in the Wild (LFW)
 #' dataset, keeping only the center portion of each image (i.e. the face).
 #' In the vast majority of images almost all of the background is omitted.
@@ -25,21 +39,11 @@
 #'
 #'
 #'
-#' @format A list with 7 entires:
-#' \describe{
-#'   \item{values}{n = max_eigenfaces eigenface eigenvalues}
-#'   \item{vectors}{n = max_eigenfaces eigenface eigenvectors}
-#'   \item{mean}{the mean image of the data set}
-#'   \item{images}{image vectors of LSWcrop data set}
-#'   \item{all_values}{eigenface eigenvalues for the entire data set}
-#'   \item{all_vectors}{eigenface eigenvectors for the entire data set}
-#'   \item{dataset_coef}{coefficients to reconstruct original face image from eigenfaces}
-#' }
+#' @format double array containing the pixel values of 100 LFWcrop images.
+#'
 #' @source \url{https://towardsdatascience.com/eigenfaces-recovering-humans-from-ghosts-17606c328184}
 #'
 #' @references
-#'
-#'
 #' (1) C. Sanderson, B.C. Lovell.
 #' Multi-Region Probabilistic Histograms for Robust
 #' and Scalable Identity Inference.
@@ -50,4 +54,13 @@
 #' Face Recognition in Unconstrained Environments.
 #' University of Massachusetts, Amherst,
 #' Technical Report 07-49, 2007.
-"dataset"
+"images"
+
+#' Billy Joel.
+#'
+#' Billy Joels image of the LFWcrop data set. Please refer to \code{?images} for more information.
+#'
+#'@format double array containing the pixel values of Billy Joels image of the LFWcrop data set.
+#'
+#'@source \url{https://towardsdatascience.com/eigenfaces-recovering-humans-from-ghosts-17606c328184}
+"billy"

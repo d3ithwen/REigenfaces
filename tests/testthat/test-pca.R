@@ -61,10 +61,10 @@ test_that("change_max_eigenfaces can handle wrong dataset", {
   expect_error(change_max_eigenfaces(dataset, "foo"), "max_eigenfaces must be numeric")
 })
 
-test_that("change_max_eigenfaces produces correct output", {
-  copy1 <- dataset
-  copy2 <- dataset
-
-  copy1 <- change_max_eigenfaces(copy1, length(copy1$values)-1)
-  expect_equal(length(copy1$values)+1, length(copy2$values))
-})
+# test_that("change_max_eigenfaces produces correct output", {
+#   copy1 <- dataset
+#   copy2 <- dataset
+#
+#   copy1 <- change_max_eigenfaces(copy1, length(copy1$values)-1)
+#   expect_equal(length(copy1$values)+1, length(copy2$values))
+# })
