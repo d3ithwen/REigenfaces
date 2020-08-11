@@ -235,7 +235,7 @@ load_dataset <- function(images, max_eigenfaces=0L, standardized=TRUE) {
 #' faces <- most_important_eigenfaces(dataset, 16L)
 #' @export
 most_important_eigenfaces <- function(dataset, max_count=1L) {
-  stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
+  stopifnot("dataset must be of class eigenface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
   stopifnot("max_count must be numeric" = is.numeric(max_count))
 
   count <- min(max_count, ncol(dataset$eigenfaces)-3)
