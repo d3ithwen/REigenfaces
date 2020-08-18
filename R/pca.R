@@ -115,6 +115,7 @@ pca <- function(images, max_eigenfaces, standardized) {
       summed_variance <- summed_variance + dataset$values[index]
       index <- index + 1
     }
+
     dataset$eigenfaces <- dataset$eigenfaces[,4:(index-1)]
   }
 
@@ -238,8 +239,8 @@ most_important_eigenfaces <- function(dataset, max_count=1L) {
   stopifnot("dataset must be of class eigenface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
   stopifnot("max_count must be numeric" = is.numeric(max_count))
 
-  count <- min(max_count, ncol(dataset$eigenfaces)-3)
-  return(dataset$eigenfaces[,4:(count+3)])
+  count <- min(max_count, ncol(dataset$eigenfaces))
+  return(dataset$eigenfaces[,1:(count)])
 }
 
 #' Similar Faces.
