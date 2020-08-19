@@ -17,6 +17,7 @@ The REigenfaces package contains the following functions:
 \item{\code{\link{most_important_eigenfaces}}}
 \item{\code{\link{similar_faces_indices}}}
 \item{\code{\link{reconstructed_dataset_images}}}
+\item{\code{\link{runShiny}}}
 }
 To learn more about REigenfaces, refer to the vignettes and function documentations.
 }

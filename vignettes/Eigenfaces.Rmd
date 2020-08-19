@@ -82,6 +82,9 @@ show_images(faces, dataset$image_size)
 
 # 2. Shiny App
 
+The REigenfaces Package provides an interactive shiny application to play around with the functionalities described in Section 1. To start this app simply execute `REigenfaces::runShiny()`.    
+You can select one of the 100 faces in the example `dataset` with the index selection in the top left. In the top right the eigenface reconstruction of the selected face using up to 64 eigenfaces is displayed. In the bottom left, four similar faces in the dataset are displayed and the plot in the bottom right shows the contribution coefficient of each eigenface to the reconstruction.
+
 # 3. Eigenfaces
 
 ## Introduction

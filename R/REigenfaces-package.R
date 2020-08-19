@@ -7,6 +7,7 @@
 ##'  \item{\code{\link{most_important_eigenfaces}}}
 ##'  \item{\code{\link{similar_faces_indices}}}
 ##'  \item{\code{\link{reconstructed_dataset_images}}}
+##'  \item{\code{\link{runShiny}}}
 ##' }
 #' To learn more about REigenfaces, refer to the vignettes and function documentations.
 #' @references
@@ -24,6 +25,6 @@
 # roxygen namespace tags. Modify with care!
 ## usethis namespace: start
 ## usethis namespace: end
-#' @import pixmap
+#' @import pixmap shiny stringr
 #' @importFrom "graphics" "par"
 NULL
