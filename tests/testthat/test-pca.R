@@ -50,7 +50,7 @@ test_that("show_most_important_eigenfaces can handle wrong input", {
 
 test_that("show_similar_faces can handle wrong input", {
   expect_error(similar_faces_indices(empty_dataset), "dataset must be of class eigeface and type list")
-  expect_error(similar_faces_indices(dataset, "foo"), "image must be a double vector")
+  expect_error(similar_faces_indices(dataset, "foo"), "image has wrong dimensions")
   expect_error(similar_faces_indices(dataset, c(1,2,3), "bar"), "max_count must be numeric")
 })
 
