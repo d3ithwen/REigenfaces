@@ -300,7 +300,7 @@ reconstructed_dataset_images <- function(dataset, indices) {
   stopifnot("indices must be numeric" = is.numeric(indices))
   stopifnot("indices must be a vector" = is.vector(indices))
 
-  indices <- indices[(indices > 0) & (indices <= nrow(dataset$image_coef))]
+  indices <- indices[(indices > 0) & (indices <= ncol(dataset$image_coef))]
   reconstructions <- sapply(indices, function(x) reconstruct_dataset_image(dataset, x))
   colnames(reconstructions) <- colnames(dataset$image_coef)[indices]
   return(reconstructions)
