@@ -35,8 +35,6 @@ load_pgm_image <- function(path, expected_size) {
 }
 
 project_faces <- function(dataset, faces) {
-  stopifnot(is.numeric(faces))
-
   faces <- faces - dataset$mean
 
   std_matrix <- diag(dataset$std_values)
@@ -52,9 +50,6 @@ project_faces <- function(dataset, faces) {
 }
 
 pca <- function(images, max_eigenfaces, standardized) {
-  stopifnot(is.numeric(max_eigenfaces))
-  stopifnot(max_eigenfaces >= 0)
-
   max_eigenfaces <- as.integer(max_eigenfaces)
   num_images <- ncol(images)
   mean_image <- 1/num_images * apply(images, 1, sum)
@@ -96,27 +91,41 @@ pca <- function(images, max_eigenfaces, standardized) {
   dataset$eigenfaces <- apply(dataset$eigenfaces, 2, normalize)
 
   if(max_eigenfaces > 0) {
-    num_eigenfaces <- min(max_eigenfaces, ncol(dataset$eigenfaces)-3)
-    if(length(dataset$eigenfaces) > 0) {
-      if(num_eigenfaces >= 3) {
-        # Remove the first 3 eigenfaces since those probably correspond to
-        # differences in lighting
-        dataset$eigenfaces <- dataset$eigenfaces[,4:(3+num_eigenfaces)]
-      } else {
-        dataset$eigenfaces <- dataset$eigenfaces[,0:num_eigenfaces]
-      }
+    # Remove first 3 eigenfaces if there are enough other eigenfaces
+    if(ncol(dataset$eigenfaces) >= 9) {
+      # Remove the first 3 eigenfaces since those probably correspond to
+      # differences in lighting
+      num_eigenfaces <- min(max_eigenfaces, ncol(dataset$eigenfaces)-3)
+      dataset$eigenfaces <- dataset$eigenfaces[,4:(3+num_eigenfaces)]
+    } else {
+      num_eigenfaces <- min(max_eigenfaces, ncol(dataset$eigenfaces))
+      dataset$eigenfaces <- dataset$eigenfaces[,0:num_eigenfaces]
     }
   } else {
-    total_variance <- sum(dataset$values[-(1:3)])
-    index <- 4
-    summed_variance <- 0
+    # Remove first 3 eigenfaces if there are enough other eigenfaces
+    if(ncol(dataset$eigenfaces) >= 9) {
+      total_variance <- sum(dataset$values[-(1:3)])
+      index <- 4
+      summed_variance <- 0
 
-    while(index <= length(dataset$values) & summed_variance / total_variance < 0.95) {
-      summed_variance <- summed_variance + dataset$values[index]
-      index <- index + 1
+      while(index <= length(dataset$values) & summed_variance / total_variance < 0.95) {
+        summed_variance <- summed_variance + dataset$values[index]
+        index <- index + 1
+      }
+
+      dataset$eigenfaces <- dataset$eigenfaces[,4:(index-1)]
+    } else {
+      total_variance <- sum(dataset$values)
+      index <- 1
+      summed_variance <- 0
+
+      while(index <= length(dataset$values) & summed_variance / total_variance < 0.95) {
+        summed_variance <- summed_variance + dataset$values[index]
+        index <- index + 1
+      }
+
+      dataset$eigenfaces <- dataset$eigenfaces[,1:(index-1)]
     }
-
-    dataset$eigenfaces <- dataset$eigenfaces[,4:(index-1)]
   }
 
 
@@ -147,7 +156,6 @@ closest_matches_image <- function(dataset, image) {
 }
 
 reconstruct_dataset_image <- function(dataset, index) {
-  stopifnot(ncol(dataset$eigenfaces) == length(dataset$image_coef[,index]))
   std_inverse_matrix <- diag(1/dataset$std_values)
   return(as.vector(std_inverse_matrix%*%(dataset$eigenfaces %*% matrix(dataset$image_coef[,index], ncol=1))+dataset$mean))
 }
@@ -238,9 +246,11 @@ load_dataset <- function(images, max_eigenfaces=0L, standardized=TRUE) {
 most_important_eigenfaces <- function(dataset, max_count=1L) {
   stopifnot("dataset must be of class eigenface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
   stopifnot("max_count must be numeric" = is.numeric(max_count))
+  stopifnot("max_count must be a single value" = is.vector(max_count) & length(max_count) == 1)
+  stopifnot("max_count must be greater than 0" = max_count > 0)
 
   count <- min(max_count, ncol(dataset$eigenfaces))
-  return(dataset$eigenfaces[,1:(count)])
+  return(dataset$eigenfaces[,1:count])
 }
 
 #' Similar Faces.
@@ -256,17 +266,23 @@ most_important_eigenfaces <- function(dataset, max_count=1L) {
 #' @export
 similar_faces_indices <- function(dataset, image, max_count=1L) {
   stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
-  stopifnot("image must be a double vector" = is.double(image))
+  stopifnot("image must be a vector or matrix" = is.vector(image) | is.matrix(image))
   stopifnot("max_count must be numeric" = is.numeric(max_count))
+  stopifnot("max_count must be a single value" = is.vector(max_count) & length(max_count) == 1)
+  stopifnot("max_count must be greater than 0" = max_count > 0)
 
-  closest <- closest_matches_image(dataset, image)
+  if(!is.matrix(image)) image <- matrix(image, ncol=1)
+
+  stopifnot("image has wrong dimensions" = nrow(image) == prod(dataset$image_size))
+
+  closest <- closest_matches_image(dataset, image[,1])
 
   count <- min(max_count, length(closest))
   closest <- structure(closest[1:count], "norm"=attr(closest, "norm")[closest[1:count]])
 
   names(closest) <- colnames(dataset$image_coef)[closest]
 
-  invisible(closest)
+  return(closest)
 }
 
 #' Reconstruct Faces Using Eigenfaces.
@@ -282,8 +298,9 @@ similar_faces_indices <- function(dataset, image, max_count=1L) {
 reconstructed_dataset_images <- function(dataset, indices) {
   stopifnot("dataset must be of class eigeface and type list" = (class(dataset) == "eigenface" & is.list(dataset)))
   stopifnot("indices must be numeric" = is.numeric(indices))
+  stopifnot("indices must be a vector" = is.vector(indices))
 
-  indices <- indices[indices <= nrow(dataset$image_coef)]
+  indices <- indices[(indices > 0) & (indices <= nrow(dataset$image_coef))]
   reconstructions <- sapply(indices, function(x) reconstruct_dataset_image(dataset, x))
   colnames(reconstructions) <- colnames(dataset$image_coef)[indices]
   return(reconstructions)
@@ -299,10 +316,12 @@ reconstructed_dataset_images <- function(dataset, indices) {
 #' show_images(billy, dataset$image_size)
 #' @export
 show_images <- function(images, size) {
-  stopifnot(length(size) == 2)
-  stopifnot(prod(size) == nrow(images))
+  stopifnot("Invalid size argument" = length(size) == 2)
+  stopifnot("images must be a vector or a matrix" = is.vector(images) | is.matrix(images))
 
   if(!is.matrix(images)) images <- matrix(images, ncol=1)
+
+  stopifnot("Size does not match image dimensions" = prod(size) == nrow(images))
 
   hor <- 4L
   ver <- 4L
@@ -311,34 +330,3 @@ show_images <- function(images, size) {
   count <- min(16, ncol(images))
   for(i in 1:count) pixmap::plot(pixmap::pixmapGrey(images[,i], nrow=size[1]))
 }
-
-#dataset_pattern <- "(0001)|(0002)|(0003)|(0004)|(0005)|(0006)|(0007)|(0008)|(0009)|(0010)|(0011)|(0012)|(0013)|(0014)|(0015)|(0016)|(0017)|(0018)"
-#test_pattern <- "(0019)|(0020)"
-#dataset_images <- load_pgm_images("G:\\Uni\\R Kurs\\Project\\datasets\\LFWcrop_sub\\", pattern=dataset_pattern, max_images=1000L)
-#test_images <- load_pgm_images("G:\\Uni\\R Kurs\\Project\\datasets\\LFWcrop_sub\\", pattern=test_pattern)
-#
-#dataset <- load_dataset(dataset_images, max_eigenfaces=0L)
-
-#correct <- 0
-#count <- 40
-#for(i in 1:count) {
-#  image <- test_images[,i,drop=FALSE]
-#  image_name <- colnames(image)[1]
-#  faces_indices <- similar_faces_indices(dataset, image, 15)
-#  faces_names <- names(faces_indices)
-#  #show_images(cbind(image, dataset_images[,faces_indices]), dataset$image_size)
-#  name_found <- stringr::str_detect(faces_names, image_name)
-#  if(!any(name_found)) {
-#    print("Not recognized")
-#  } else {
-#    print(which(name_found)[1])
-#    if(which(name_found)[1] == 1) correct <- correct+1
-#  }
-#}
-#cat("Correct: ", correct, "/", count, ", ", 100*correct/count, "%")
-
-
-#faces <- most_important_eigenfaces(dataset, 16L)
-#faces <- reconstructed_dataset_images(dataset, 1:16)
-
-#show_images(faces, dataset$image_size)
