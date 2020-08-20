@@ -44,14 +44,19 @@ empty_dataset <- list()
 test_that("show_most_important_eigenfaces can handle wrong input", {
   expect_error(most_important_eigenfaces(empty_dataset), "dataset must be of class eigenface and type list")
   expect_error(most_important_eigenfaces(dataset, "foo"), "max_count must be numeric")
+  expect_error(most_important_eigenfaces(dataset, c(1,2,3)), "max_count must be a single value")
+  expect_error(most_important_eigenfaces(dataset, -4), "max_count must be greater than 0")
 })
 
 ######################### testing similar_faces_indices() #########################
 
 test_that("show_similar_faces can handle wrong input", {
   expect_error(similar_faces_indices(empty_dataset), "dataset must be of class eigeface and type list")
+  expect_error(similar_faces_indices(dataset, structure(1:24, dim=1:4)), "image must be a vector or matrix")
   expect_error(similar_faces_indices(dataset, "foo"), "image has wrong dimensions")
   expect_error(similar_faces_indices(dataset, c(1,2,3), "bar"), "max_count must be numeric")
+  expect_error(similar_faces_indices(dataset, c(1,2,3), c(1,2)), "max_count must be a single value")
+  expect_error(similar_faces_indices(dataset, c(1,2,3), -4), "max_count must be greater than 0")
 })
 
 ######################### testing reconstructed_dataset_images() #########################
@@ -59,4 +64,14 @@ test_that("show_similar_faces can handle wrong input", {
 test_that("reconstruct_dataset_images can handle wrong dataset", {
   expect_error(reconstructed_dataset_images(empty_dataset), "dataset must be of class eigeface and type list")
   expect_error(reconstructed_dataset_images(dataset, "foo"), "indices must be numeric")
+})
+
+######################### testing show_images() ##############################
+
+wrong_image <- matrix(1, ncol=2, nrow=2)
+
+test_that("show_images can handle wrong input", {
+  expect_error(show_images(wrong_image, 2L), "Invalid size argument")
+  expect_error(show_images(structure(1:24, dim=1:4), size=c(4,6)), "images must be a vector or a matrix")
+  expect_error(show_images(wrong_image, size = c(2,2)), "Size does not match image dimensions")
 })
