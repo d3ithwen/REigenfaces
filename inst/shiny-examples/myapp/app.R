@@ -1,3 +1,5 @@
+library(REigenfaces)
+
 # Compute info on images as dataset
 y <- load_dataset(images)
 
